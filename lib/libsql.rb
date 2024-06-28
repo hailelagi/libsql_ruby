@@ -1,0 +1,3 @@
+# libsql.rb
+
+require 'mkmf'

@@ -1,0 +1,8 @@
+target
+*.so
+*.dydlib
+*.log
+*.o
+test/test.db
+Gemfile.lock
+doc/
