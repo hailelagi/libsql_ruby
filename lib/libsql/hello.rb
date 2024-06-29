@@ -1,5 +1,6 @@
+
 module LibSQL
   def test
-    true
+    "yay!"
   end
 end

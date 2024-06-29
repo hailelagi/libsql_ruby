@@ -1,21 +1,23 @@
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'libsql'
+
 Gem::Specification.new do |s|
   s.name = "libsql"
-  s.version = "0.0.1"
-  s.summary = "Ruby interface to libsql."
-  s.description = "Ruby interface to libsql."
+  s.version = LibSQL::VERSION
+  s.summary = "Ruby driver for libsql."
+  s.description = "Ruby driver for libsql."
   s.authors = ["Haile Lagi"]
   s.licenses = ["MIT"]
+  s.homepage = "https://github.com/hailelagi/libsql-ruby"
   s.required_ruby_version = Gem::Requirement.new(">= 3.0")
 
   s.files = [
-    ".gemtest",
     "LICENSE",
     "README.md",
-    "dependencies.yml",
-    "ext/libsql/extconf.rb",
-    "ext/libsql/libsql.c",
+    # "ext/libsql/extconf.rb"
   ]
 
   s.rdoc_options = ["README.md"]
-  s.extensions << "ext/extconf.rb"
+  # s.extensions << "ext/libsql/extconf.rb"
 end
