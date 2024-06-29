@@ -23,7 +23,6 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - name: Build and Test
     - run: exec rake compile -- --enable-system-libraries
     - run: bundle exec rake test
 
