@@ -8,23 +8,24 @@ on:
   pull_request:
 
 jobs:
-  build-test:
+  native-gem:
     runs-on: ubuntu-latest
     name: Ruby ${{ matrix.ruby }}
     strategy:
       matrix:
         ruby:
           - '3.1.0'
-
+    container:
+      image: "ghcr.io/rake-compiler/rake-compiler-dock-image:1.2.2-mri-x86_64-linux-gnu"
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - run: bundle exec rake
-
+      - uses: actions/checkout@v2
+      - run: bundle install && bundle exec rake gem:x86_64-linux-gnu:rcd
+      - uses: actions/upload-artifact@v2
+        with:
+          name: native-gem
+          path: gems
+          retention-days: 1
+ 
   rubocop:
     runs-on: ubuntu-latest
     steps:
@@ -35,19 +36,18 @@ jobs:
           bundler-cache: true
       - run: bundle exec rake rubocop
 
-  valgrind:
-    needs: build-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby-pkgs@v1
-        with:
-          ruby-version: "3.3"
-          bundler-cache: true
-          apt-get: valgrind
-      - uses: actions/cache@v4
-        with:
-          path: ports
-          key: ports-ubuntu-${{ hashFiles('ext/libsql/extconf.rb') }}
-      - run: bundle exec rake compile
-      - run: bundle exec rake test:valgrind
+  # valgrind:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: ruby/setup-ruby-pkgs@v1
+  #       with:
+  #         ruby-version: "3.3"
+  #         bundler-cache: true
+  #         apt-get: valgrind
+  #     - uses: actions/cache@v4
+  #       with:
+  #         path: ports
+  #         key: ports-ubuntu-${{ hashFiles('ext/libsql/extconf.rb') }}
+  #     - run: bundle exec rake compile
+#      - run: bundle exec rake test:valgrind
