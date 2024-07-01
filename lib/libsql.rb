@@ -1,5 +1,4 @@
-# frozen_string_literal: true
-
+require 'libsql'
 require_relative "libsql/version"
 
 module LibSQL

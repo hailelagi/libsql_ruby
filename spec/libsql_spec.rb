@@ -8,4 +8,16 @@ RSpec.describe LibSQL do
   it "does something useful" do
     expect(true).to eq(true)
   end
+
+  it "says hello world via C via Rust" do
+     expect(LibSQL.hello()).not_to be nil
+  end
+
+  it "says hello world via C" do
+     expect(LibSQL.make_hello()).not_to be nil
+  end
+
+  it "returns a fixed size type" do
+     expect(LibSQL.number()).not_to be nil
+  end
 end

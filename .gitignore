@@ -7,6 +7,8 @@ target
 test/test.db
 doc/
 
+.vscode
+
 Gemfile.lock
 
 # test and doc artifacts
