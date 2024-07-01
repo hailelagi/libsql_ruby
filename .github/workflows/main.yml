@@ -23,8 +23,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-    - run: exec rake compile -- --enable-system-libraries
-    - run: bundle exec rake test
+    - run: bundle exec rake
 
   rubocop:
     runs-on: ubuntu-latest

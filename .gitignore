@@ -1,11 +1,25 @@
+# extension stuff
 target
 *.so
 *.dydlib
 *.log
 *.o
 test/test.db
-Gemfile.lock
 doc/
+
+# test and doc artifacts
 todo.txt
 .bundle
-/pkg
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+# rspec failure tracking
+.rspec_status
+.DS_Store
+

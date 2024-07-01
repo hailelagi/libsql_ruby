@@ -1,9 +1,8 @@
-require "libsql/hello"
+# frozen_string_literal: true
+
+require_relative "libsql/version"
 
 module LibSQL
-    VERSION = "0.0.1"
-
-  def version
-    VERSION
-  end
+  class Error < StandardError; end
+  # Your code goes here...
 end
