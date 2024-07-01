@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <ruby.h>
-
-extern char *hello_rust(void);
-extern int num(void);
+#include "bindings.h"
 
 VALUE number()
 {
@@ -86,4 +84,6 @@ void Init_libsql(void)
     rb_define_method(libSQL, "initialize", my_malloc_init, 1);
     rb_define_method(libSQL, "free", my_malloc_release, 0);
     rb_define_method(libSQL, "number", number, 0);
+    rb_define_method(libSQL, "hello_rust", hello_rust, 0);
+    rb_define_method(libSQL, "num", number, 0);
 }
