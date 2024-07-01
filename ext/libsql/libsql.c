@@ -84,6 +84,12 @@ void Init_libsql(void)
     rb_define_method(libSQL, "initialize", my_malloc_init, 1);
     rb_define_method(libSQL, "free", my_malloc_release, 0);
     rb_define_method(libSQL, "number", number, 0);
+
+    // rustc linked
     rb_define_method(libSQL, "hello_rust", hello_rust, 0);
-    rb_define_method(libSQL, "num", number, 0);
+    rb_define_method(libSQL, "num", num, 0);
 }
+
+// TODO: linker broken
+// : symbol not found in flat namespace
+// ruby -Ilib:ext -r libsql -e "p LibSQL.new(5).number"
