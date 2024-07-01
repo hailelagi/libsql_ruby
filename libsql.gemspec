@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
-lib = File.expand_path("lib", __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "libsql"
-
 Gem::Specification.new do |s|
-  s.name = "Libsql"
-  s.version = LibSQL::VERSION
+  s.name = "libsql-ruby"
+  s.version = "0.0.1"
   s.summary = "Ruby driver for libSQL."
   s.description = "Ruby driver for libSQL."
   s.authors = ["Haile Lagi"]

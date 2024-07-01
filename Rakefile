@@ -10,7 +10,7 @@ RuboCop::RakeTask.new
 
 task default: %i[spec build]
 
-Rake::ExtensionTask.new('libsql_native') do |ext|
+Rake::ExtensionTask.new('libsql') do |ext|
   ext.ext_dir = "ext/libsql"
   ext.lib_dir = 'ext/libsql'
 end

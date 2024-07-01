@@ -1,7 +1,5 @@
-require 'libsql'
-require_relative "libsql/version"
-
-module LibSQL
-  class Error < StandardError; end
-  # Your code goes here...
+class LibSQL
+  VERSION = "0.0.1"
 end
+
+require "libsql/libsql"

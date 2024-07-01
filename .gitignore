@@ -26,3 +26,4 @@ todo.txt
 # rspec failure tracking
 .rspec_status
 .DS_Store
+ext/libsql/libsql.bundle
