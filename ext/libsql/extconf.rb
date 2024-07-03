@@ -1,11 +1,9 @@
+# frozen_string_literal: true
+
 require "mkmf"
 
-platform = RbConfig::CONFIG['host_os']
-
-have_library('c')
-have_header('stdio.h')
-
-# abort "missing malloc()" unless have_func "malloc"
-# abort "missing free()"   unless have_func "free"
+have_library("c")
+have_header("stdio.h")
+have_header("bindings.h")
 
 create_makefile "libsql/libsql"

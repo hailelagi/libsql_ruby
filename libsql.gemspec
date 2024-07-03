@@ -9,7 +9,6 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.homepage = "https://github.com/hailelagi/libsql-ruby"
   s.required_ruby_version = Gem::Requirement.new(">= 3.0")
-
   s.rdoc_options = ["README.md"]
   s.extensions << "ext/libsql/extconf.rb"
 end
