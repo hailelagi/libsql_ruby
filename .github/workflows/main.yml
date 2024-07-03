@@ -8,25 +8,45 @@ on:
   pull_request:
 
 jobs:
-  native-gem:
+  build_native:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Build release target
+      run: cargo build --release
+
+  build-gem:
+    needs:  build_native
     strategy:
       matrix:
-        ruby:
-          - '3.1.0'
-    container:
-      image: "ghcr.io/rake-compiler/rake-compiler-dock-image:1.2.2-mri-x86_64-linux-gnu"
+        # ruby: ["3.0", "3.1", "3.2", "3.3", "head"]
+        ruby: ["3.1"]
+        # runs-on: ["ubuntu-latest", "macos-13", "windows-latest"]
+        runs-on: ["ubuntu-latest", "macos-13"]
+    runs-on: ${{matrix.runs-on}}
     steps:
-      - uses: actions/checkout@v2
-      - run: bundle install && bundle exec rake gem:x86_64-linux-gnu:rcd
-      - uses: actions/upload-artifact@v2
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby-pkgs@v1
         with:
-          name: native-gem
-          path: gems
-          retention-days: 1
- 
+          ruby-version: ${{matrix.ruby}}
+          bundler-cache: true
+          # mingw: "libyaml" # windows
+          apt-get: "libyaml-dev" # linux
+          brew: "libyaml" # macos
+
+      - run: bundle install && bundle exec rake compile
+  
   rubocop:
+    needs: [build_native, build-gem]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,3 +71,24 @@ jobs:
   #         key: ports-ubuntu-${{ hashFiles('ext/libsql/extconf.rb') }}
   #     - run: bundle exec rake compile
 #      - run: bundle exec rake test:valgrind
+
+  # cruby-package:
+  #   runs-on: "ubuntu-latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/cache@v4
+  #       with:
+  #         path: precompiled/ports/archives
+  #         key: archives-ubuntu-${{hashFiles('precompiled/ext/precompiled/extconf.rb')}}
+  #     - uses: ruby/setup-ruby@v1
+  #       with:
+  #         working-directory: precompiled
+  #         ruby-version: "3.2"
+  #         bundler-cache: true
+  #     - run: ./bin/test-gem-build gems ruby
+  #       working-directory: precompiled
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: cruby-gem
+  #         path: precompiled/gems
+  #         retention-days: 1
