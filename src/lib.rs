@@ -18,7 +18,6 @@ pub extern "C" fn num() -> i32 {
     42
 }
 
-
 #[no_mangle]
 pub unsafe extern fn side_effect() -> libc::uintptr_t {
     // make sure libc is linked and we didn't break anything
