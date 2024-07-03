@@ -862,7 +862,9 @@ dependencies = [
 name = "libsql-ruby"
 version = "0.0.1"
 dependencies = [
+ "bytes",
  "cbindgen",
+ "hyper-rustls",
  "lazy_static",
  "libc",
  "libsql",
