@@ -1,5 +1,7 @@
-name: Ruby
-
+name: LibSQL-ruby
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
 on:
   push:
     branches:
@@ -8,7 +10,18 @@ on:
   pull_request:
 
 jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.1"
+          bundler-cache: true
+      - run: bundle exec rake rubocop
+
   build-gem:
+    needs: [rubocop, valgrind]
     strategy:
       matrix:
         # ruby: ["3.0", "3.1", "3.2", "3.3", "head"]
@@ -21,6 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+      # TODO: pls cache my deps
       - run: cargo build -vv --release && cargo test -vv
 
       - uses: ruby/setup-ruby-pkgs@v1
@@ -32,34 +46,25 @@ jobs:
           brew: "libyaml" # macos
 
       - run: bundle install && bundle exec rake compile
-      
-  
-  rubocop:
-    needs: build-gem
+
+  valgrind:
+    needs: [rubocop]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo build --release
+      - uses: ruby/setup-ruby-pkgs@v1
         with:
-          ruby-version: "3.1"
+          ruby-version: "3.3"
           bundler-cache: true
-      - run: bundle exec rake rubocop
-
-  # valgrind:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: ruby/setup-ruby-pkgs@v1
-  #       with:
-  #         ruby-version: "3.3"
-  #         bundler-cache: true
-  #         apt-get: valgrind
-  #     - uses: actions/cache@v4
-  #       with:
-  #         path: ports
-  #         key: ports-ubuntu-${{ hashFiles('ext/libsql/extconf.rb') }}
-  #     - run: bundle exec rake compile
-#      - run: bundle exec rake test:valgrind
+          apt-get: valgrind
+      - uses: actions/cache@v4
+        with:
+          path: ports
+          key: ports-ubuntu-${{ hashFiles('ext/libsql/extconf.rb') }}
+      - run: bundle exec rake compile
+      - run: bundle exec rake spec:valgrind
 
   # cruby-package:
   #   runs-on: "ubuntu-latest"
