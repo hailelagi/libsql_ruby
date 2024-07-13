@@ -151,3 +151,7 @@ int libsql_get_float(libsql_row_t res, int col, double *out_value, const char **
 int libsql_get_blob(libsql_row_t res, int col, struct blob *out_blob, const char **out_err_msg);
 
 void libsql_free_blob(struct blob b);
+
+uintptr_t side_effect(void);
+
+int32_t life_the_universe(void);

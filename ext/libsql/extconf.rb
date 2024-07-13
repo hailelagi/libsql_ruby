@@ -4,6 +4,10 @@ require "mkmf"
 
 have_library("c")
 have_header("stdio.h")
+have_header("stdbool.h")
+have_header("stdint.h")
+have_header("stdlib.h")
+have_header("stdarg.h")
 have_header("bindings.h")
 
 # TODO: replace this with something that can actually build properly

@@ -77,3 +77,4 @@ Rake::ExtensionTask.new("libsql") do |ext|
 end
 
 task default: %i[extension:build spec]
+task spec: %i[rust:bindings rust:release compile]

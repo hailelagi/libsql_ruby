@@ -7,9 +7,12 @@
 
 
 void Init_libsql(void)
-{    VALUE libSQL;
-    libSQL = rb_define_module("LibSQL");
+{    
+VALUE libSQL;
+   libSQLm = rb_const_get(rb_cObject, rb_intern("LibSQL"));
+   libSQL = rb_define_class_under(libSQL, "LibSQL", rb_cObject);
 
-    libSQL = rb_const_get(rb_cObject, rb_intern("LibSQL"));
-
+   //  ruby -Ilib:ext -r libsql -e "p LibSQL::Database.new().life_the_universe"
+   rb_define_method(libSQL, "life_the_universe", life_the_universe, 0);
+   rb_define_method(libSQL, "side_effect", side_effect, 0);
 }

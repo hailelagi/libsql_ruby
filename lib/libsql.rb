@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-require "libsql/libsql"
+require_relative "libsql/database"
 
-class LibSQL
-  VERSION = "0.0.1"
+module LibSQL
+  class Error < StandardError; end
+
+  def self.threadsafe?
+    true
+  end
 end

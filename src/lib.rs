@@ -32,6 +32,8 @@ use types::{
     libsql_row_t, libsql_rows, libsql_rows_future_t, libsql_rows_t, libsql_stmt, libsql_stmt_t,
     stmt,
 };
+use libc::c_char;
+use std::ffi::CStr;
 
 lazy_static! {
     static ref RT: Runtime = tokio::runtime::Runtime::new().unwrap();
@@ -900,4 +902,23 @@ pub unsafe extern "C" fn libsql_free_blob(b: blob) {
             unsafe { std::slice::from_raw_parts_mut(b.ptr as *mut i8, b.len.try_into().unwrap()) };
         let _ = unsafe { Box::from_raw(ptr) };
     }
+}
+
+////////////
+/// MISC ///
+////////////
+
+#[allow(non_upper_case_globals)]
+static Qnil: libc::uintptr_t = 0x08 as libc::uintptr_t;
+
+#[no_mangle]
+pub unsafe extern fn side_effect() -> libc::uintptr_t {
+    // make sure libc is linked and we didn't break anything
+    print!("side effect returns nil");
+    Qnil
+}
+/* This is not layed out in a way ruby understands kek :/ */
+#[no_mangle]
+pub extern "C" fn life_the_universe() -> i32 {
+    42
 }
