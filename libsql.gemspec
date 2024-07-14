@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "lib/libsql/version"
+require_relative "lib/libSQL/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "libsql_ruby"
+  spec.name = "libSQL"
   spec.version = LibSQL::VERSION
   spec.authors = ["Haile Lagi"]
   spec.email = ["52631736+hailelagi@users.noreply.github.com"]
@@ -32,10 +32,8 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.extensions = ["ext/libsql/Cargo.toml"]
+  spec.extensions = ["ext/libSQL/Cargo.toml"]
 
-  # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
   spec.add_dependency "rubocop", "~> 1.59.0"
   spec.add_dependency "ruby_memcheck", "3.0.0" if Gem::Platform.local.os == "linux"
 

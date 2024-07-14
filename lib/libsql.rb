@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "libsql/version"
-require_relative "libsql/libsql"
+require_relative "libSQL/version"
+require_relative "libSQL/libSQL"
 
 module LibSQL
   class Error < StandardError; end

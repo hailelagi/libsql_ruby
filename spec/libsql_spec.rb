@@ -6,6 +6,6 @@ RSpec.describe LibSQL do
   end
 
   it "does something useful" do
-    expect(false).to eq(true)
+    expect(LibSQL.hello("life the universe")).to eq("Hello from Rust, life the universe!")
   end
 end

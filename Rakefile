@@ -13,10 +13,10 @@ require "rb_sys/extensiontask"
 
 task build: :compile
 
-GEMSPEC = Gem::Specification.load("libsql.gemspec")
+GEMSPEC = Gem::Specification.load("libSQL.gemspec")
 
-RbSys::ExtensionTask.new("libsql", GEMSPEC) do |ext|
-  ext.lib_dir = "ext/libsql"
+RbSys::ExtensionTask.new("libSQL", GEMSPEC) do |ext|
+  ext.lib_dir = "lib/libSQL"
 end
 
 task default: %i[compile spec rubocop]

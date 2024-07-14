@@ -3,4 +3,4 @@
 require "mkmf"
 require "rb_sys/mkmf"
 
-create_rust_makefile("libsql/libsql")
+create_rust_makefile("libSQL/libSQL")

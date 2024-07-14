@@ -3,5 +3,5 @@
 # in the ext/ directory.
 
 [workspace]
-members = ["./ext/libsql"]
+members = ["./ext/libSQL"]
 resolver = "2"

@@ -1,4 +1,4 @@
-# extension stuff
+# build artefacts
 target
 *.so
 *.dydlib
@@ -11,9 +11,7 @@ doc/
 
 Gemfile.lock
 
-# test and doc artifacts
 todo.txt
-.bundle
 /.bundle/
 /.yardoc
 /_yardoc/
@@ -22,8 +20,13 @@ todo.txt
 /pkg/
 /spec/reports/
 /tmp/
+*.bundle
+*.so
+*.o
+*.a
+mkmf.log
+target/
 
 # rspec failure tracking
 .rspec_status
 .DS_Store
-ext/libsql/libsql.bundle
