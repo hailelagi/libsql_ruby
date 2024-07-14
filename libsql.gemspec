@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "lib/libSQL/version"
+require_relative "lib/libsql/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "libSQL"
+  spec.name = "libsql_ruby"
   spec.version = LibSQL::VERSION
   spec.authors = ["Haile Lagi"]
   spec.email = ["52631736+hailelagi@users.noreply.github.com"]
@@ -33,7 +33,6 @@ Gem::Specification.new do |spec|
   spec.extensions = ["ext/libSQL/Cargo.toml"]
 
   spec.add_dependency "rubocop", "~> 1.59.0"
-  spec.add_dependency "ruby_memcheck", "3.0.0" if Gem::Platform.local.os == "linux"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
