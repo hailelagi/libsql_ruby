@@ -1,14 +1,44 @@
 # frozen_string_literal: true
 
-Gem::Specification.new do |s|
-  s.name = "libsql-ruby"
-  s.version = "0.0.1"
-  s.summary = "Ruby driver for libSQL."
-  s.description = "Ruby driver for libSQL."
-  s.authors = ["Haile Lagi"]
-  s.licenses = ["MIT"]
-  s.homepage = "https://github.com/hailelagi/libsql-ruby"
-  s.required_ruby_version = Gem::Requirement.new(">= 3.0")
-  s.rdoc_options = ["README.md"]
-  s.extensions << "ext/libsql/extconf.rb"
+require_relative "lib/libsql/version"
+
+Gem::Specification.new do |spec|
+  spec.name = "libsql_ruby"
+  spec.version = LibSQL::VERSION
+  spec.authors = ["Haile Lagi"]
+  spec.email = ["52631736+hailelagi@users.noreply.github.com"]
+
+  spec.summary = "Ruby driver for libSQL."
+  spec.homepage = "https://github.com/hailelagi/libsql_ruby"
+  spec.license = "MIT"
+  spec.required_ruby_version = ">= 3.0.0"
+  spec.required_rubygems_version = ">= 3.3.11"
+
+  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+
+  spec.metadata["homepage_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+
+  # Specify which files should be added to the gem when it is released.
+  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
+  gemspec = File.basename(__FILE__)
+  spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
+    ls.readlines("\x0", chomp: true).reject do |f|
+      (f == gemspec) ||
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+    end
+  end
+  spec.bindir = "exe"
+  spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.require_paths = ["lib"]
+  spec.extensions = ["ext/libsql/Cargo.toml"]
+
+  # Uncomment to register a new dependency of your gem
+  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "rubocop", "~> 1.59.0"
+  spec.add_dependency "ruby_memcheck", "3.0.0" if Gem::Platform.local.os == "linux"
+
+  # For more information and examples about making a new gem, check out our
+  # guide at: https://bundler.io/guides/creating_gem.html
 end
