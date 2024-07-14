@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 module LibSQL
-  # TODO: fetch this from the rust crate
-  VERSION = "0.0.1"
+  VERSION = "0.1.0"
   SQLITE3_VERSION = "0.0.0"
 end

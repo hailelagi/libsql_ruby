@@ -2,16 +2,14 @@
 
 source "https://rubygems.org"
 
+# Specify your gem's dependencies in libSQL.gemspec
 gemspec
 
-group :development do
-  gem "rake", "~> 13.2"
-  gem "rake-compiler", "1.2.7"
-  gem "rake-compiler-dock", "1.5.1"
-  gem "rdoc", "6.7.0"
-  gem "rspec", "~> 3.0", require: false
-  gem "rubocop", "1.59.0", require: false
-  gem "rubocop-minitest", "0.34.5", require: false
-  gem "ruby_memcheck", "3.0.0" if Gem::Platform.local.os == "linux"
-  gem "standard", "1.33.0", require: false
-end
+gem "rake", "~> 13.0"
+
+gem "rake-compiler"
+gem "rb_sys", "~> 0.9.63"
+
+gem "rspec", "~> 3.0"
+
+gem "rubocop", "~> 1.21"
