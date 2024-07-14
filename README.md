@@ -1,10 +1,20 @@
-# LibsqlRuby
+# LibSQL Ruby
 
-A low-level ruby driver for libSQL.
+A low-level ruby driver for libSQL/SQLite3.
 
-## You're probably looking for something else
-```
-TODO
+## Example
+
+```ruby
+require "libsql_ruby"
+
+db = LibSQL::Database.new "test.db"
+
+rows = db.execute <<-SQL
+  create table user (
+    name varchar(30),
+    age int
+  );
+SQL
 ```
 
 ## Installation
