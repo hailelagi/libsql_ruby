@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.extensions = ["ext/libSQL/Cargo.toml"]
+  spec.extensions = ["ext/libsql/Cargo.toml"]
 
   spec.add_dependency "rubocop", "~> 1.59.0"
 
