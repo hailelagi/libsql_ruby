@@ -22,19 +22,27 @@ jobs:
       - run: bundle exec rake compile
       - run: bundle exec rake rubocop
 
-  valgrind:
+  test:
     needs: [rubocop]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: oxidize-rb/actions/setup-ruby-and-rust@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
+          cargo-cache: true
+      - name: Run ruby tests
+        run: bundle exec rake
+
+      - name: Lint rust
+        run: cargo clippy && cargo fmt --check
 
       - run: |
           sudo apt-get update
           sudo apt-get install -y libc6-dbg
-      - name: Install Valgrind from source
+    
+      - name: Install and test against Valgrind from source
         run: |
           wget https://sourceware.org/pub/valgrind/valgrind-3.21.0.tar.bz2
           tar xvf valgrind-3.21.0.tar.bz2
@@ -42,12 +50,12 @@ jobs:
           ./configure
           make
           sudo make install
-      - run: bundle install --jobs=3 --retry=3
-      - run: bundle exec rake
-      - run: bundle exec rake spec:valgrind
+          cd ..
+          bundle install
+          bundle exec rake spec:valgrind
 
   build:
-    needs: [valgrind, rubocop]
+    needs: [test, rubocop]
     runs-on: ${{matrix.os }}
     name: Ruby ${{ matrix.ruby }}
     strategy:
