@@ -1,5 +1,7 @@
 use magnus::{function, prelude::*, Error, Ruby};
 
+mod database;
+
 fn hello(subject: String) -> String {
     format!("Hello from Rust, {subject}!")
 }
