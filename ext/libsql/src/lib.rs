@@ -1,5 +1,5 @@
 use ::libsql as libsql_core;
-use magnus::{function, prelude::*, Error, ExceptionClass, Module, Ruby};
+use magnus::{function, prelude::*, Error, ExceptionClass, Module, Object, Ruby};
 
 mod database;
 mod errors;
@@ -15,11 +15,11 @@ fn hello_raise(subject: String) -> Result<String, Error> {
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
     let module = ruby.define_module("LibSQL")?;
-    let except_class = module
-        .define_class("Error", ruby.class_object())
-        .unwrap();
+    let except_class = module.define_class("Exception", ruby.class_object())?;
 
-    except_class.define_error("InvalidUTF8Path", ruby.exception_standard_error());
+    module.const_set("SQLITE3_VERSION", libsql_core::version())?;
+
+    except_class.define_error("InvalidUTF8Path", ruby.exception_standard_error())?;
 
     module.define_singleton_method("hello", function!(hello, 1))?;
     module.define_singleton_method("hello_raise", function!(hello_raise, 1))?;
