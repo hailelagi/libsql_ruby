@@ -31,5 +31,17 @@ task "compile:debug" do
   Rake::Task["compile"].invoke
 end
 
+begin
+  require "yard"
+
+  YARD::Rake::YardocTask.new
+
+  task :docs do
+    `yard server --reload`
+  end
+rescue LoadError
+  warn("could not serve yard docs")
+end
+
 task build: :compile
 task default: %i[compile spec rubocop]

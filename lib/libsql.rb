@@ -6,5 +6,6 @@ require_relative "libsql/errors"
 
 # stub
 module LibSQL
-  # stub
+  class Database
+  end
 end

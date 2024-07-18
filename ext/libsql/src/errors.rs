@@ -1,8 +1,18 @@
 use ::libsql as libsql_core;
 use magnus::{eval, prelude::*, Error, ExceptionClass, IntoValue};
 
-// could refactor with a lazy static init
+// TODO: could refactor with a lazy static init by pre-processing the Enums
+/*
+https://github.com/matsadler/magnus/blob/main/examples/custom_exception_ruby/ext/ahriman/src/lib.rs#L6 &
+https://github.com/matsadler/magnus/blob/main/examples/custom_exception_rust/ext/ahriman/src/lib.rs
+static ERROR: Lazy<ExceptionClass> = Lazy::new(|ruby| {
+    ruby
+        .get_inner(&AHRIMAN)
+        .define_error("Error", ruby.exception_standard_error())
+        .unwrap()
+});
 
+*/
 pub fn to_rb_exception(error: libsql_core::errors::Error) -> Error {
     let message = match &error {
         libsql_core::Error::SqliteFailure(_, err) => err.to_string(),

@@ -3,59 +3,59 @@
 # standard error classes
 module LibSQL
   # errors
-  class Exception < StandardError; end
+  class Error < StandardError; end
 
-  class ConnectionFailed < Exception; end
+  class ConnectionFailed < Error; end
 
-  class SqliteFailure < Exception; end
+  class SqliteFailure < Error; end
 
-  class NullValue < Exception; end
+  class NullValue < Error; end
 
-  class Misuse < Exception; end
+  class Misuse < Error; end
 
-  class ExecuteReturnedRows < Exception; end
+  class ExecuteReturnedRows < Error; end
 
-  class QueryReturnedNoRows < Exception; end
+  class QueryReturnedNoRows < Error; end
 
-  class InvalidColumnName < Exception; end
+  class InvalidColumnName < Error; end
 
-  class ToSqlConversionFailure < Exception; end
+  class ToSqlConversionFailure < Error; end
 
-  class SyncNotSupported < Exception; end
+  class SyncNotSupported < Error; end
 
-  class LoadExtensionNotSupported < Exception; end
+  class LoadExtensionNotSupported < Error; end
 
-  class ColumnNotFound < Exception; end
+  class ColumnNotFound < Error; end
 
-  class Hrana < Exception; end
+  class Hrana < Error; end
 
-  class WriteDelegation < Exception; end
+  class WriteDelegation < Error; end
 
-  class Bincode < Exception; end
+  class Bincode < Error; end
 
-  class InvalidColumnIndex < Exception; end
+  class InvalidColumnIndex < Error; end
 
-  class InvalidColumnType < Exception; end
+  class InvalidColumnType < Error; end
 
-  class Sqlite3SyntaxError < Exception; end
+  class Sqlite3SyntaxError < Error; end
 
-  class Sqlite3UnsupportedStatement < Exception; end
+  class Sqlite3UnsupportedStatement < Error; end
 
-  class Sqlite3ParserError < Exception; end
+  class Sqlite3ParserError < Error; end
 
-  class RemoteSqliteFailure < Exception; end
+  class RemoteSqliteFailure < Error; end
 
-  class Replication < Exception; end
+  class Replication < Error; end
 
-  class InvalidUTF8Path < Exception; end
+  class InvalidUTF8Path < Error; end
 
-  class FreezeNotSupported < Exception; end
+  class FreezeNotSupported < Error; end
 
-  class InvalidParserState < Exception; end
+  class InvalidParserState < Error; end
 
-  class InvalidTlsConfiguration < Exception; end
+  class InvalidTlsConfiguration < Error; end
 
-  class TransactionalBatchError < Exception; end
+  class TransactionalBatchError < Error; end
 
-  class InvalidBlobSize < Exception; end
+  class InvalidBlobSize < Error; end
 end
