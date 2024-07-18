@@ -1,11 +1,22 @@
-//! Database.rs 
-//! 
-//! 
+//! Database.rs
+//!
+//!
+use libsql::{Builder, Database};
+use magnus::{function, prelude::*, Error, ExceptionClass, Ruby};
+
+
+// figure out async?
+// fn connect(ruby: &Ruby, database: String) -> Result<(), Error> {
+//     let db = Builder::new_local(":memory:").build().await.unwrap();
+//     let conn = db.connect().unwrap();
+
+//     Ok(())
+// }
 
 #[cfg(test)]
 mod tests {
+    use rb_sys::{rb_int2big, rb_num2fix, FIXNUM_P};
     use rb_sys_test_helpers::ruby_test;
-    use rb_sys::{rb_num2fix, rb_int2big, FIXNUM_P};
 
     #[ruby_test]
     fn test_something() {
