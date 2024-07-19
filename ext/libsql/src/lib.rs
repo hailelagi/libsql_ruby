@@ -1,7 +1,6 @@
-
 use ::libsql;
-use magnus::{function, method, prelude::*, Error, Module, Object, Ruby};
 use database::Database;
+use magnus::{function, method, prelude::*, Error, Module, Object, Ruby};
 
 pub mod connection;
 mod database;

@@ -24,7 +24,7 @@ pub enum Mode {
 #[magnus::wrap(class = "LibSQL::Database")]
 pub(crate) struct Database {
     conn: RefCell<Option<Arc<Mutex<libsql::Connection>>>>,
-    db: RefCell<Option<Arc<Mutex<libsql::Database>>>>
+    db: RefCell<Option<Arc<Mutex<libsql::Database>>>>,
 }
 
 impl Database {
@@ -44,7 +44,9 @@ impl Database {
         let _: () = args.splat;
         let url = url.unwrap_or_else(|| String::from("test.db"));
 
-        let db = TOKIO_RT.block_on(async { libsql::Builder::new_local(url).build().await}).unwrap();
+        let db = TOKIO_RT
+            .block_on(async { libsql::Builder::new_local(url).build().await })
+            .unwrap();
         let conn = TOKIO_RT.block_on(async { db.connect() }).unwrap();
 
         Ok(Database::new(db, conn))
