@@ -1,64 +1,54 @@
 //! Database.rs
 
 use std::cell::RefCell;
-use std::sync::Mutex;
+use std::sync::{Arc, Mutex};
 
 use libsql;
-use libsql::{Builder, Database};
+use libsql::{Builder, Connection};
 use magnus::{
-    function, class, define_class, exception, method, module,
+    class, define_class, exception, function, method, module,
     prelude::*,
     scan_args::{get_kwargs, scan_args},
     typed_data, Error, Value,
 };
 
-use crate::errors;
+use crate::connection::runtime::TOKIO_RT;
 
 pub enum Mode {
     Remote,
     Local,
-    RemoteReplica
+    RemoteReplica,
 }
 
+#[derive(Default)]
 #[magnus::wrap(class = "LibSQL::Database")]
-pub(crate) struct LibSQL {
-    mode: Mode,
-    conn_id: String,
-    db: Option<RefCell<Mutex<libsql::Database>>>
+pub(crate) struct Database {
+    conn: RefCell<Option<Arc<Mutex<libsql::Connection>>>>,
+    db: RefCell<Option<Arc<Mutex<libsql::Database>>>>
 }
 
-impl LibSQL {
-    fn initialize(rb_self: typed_data::Obj<Self>, args: &[Value]) -> Result<(), Error> {
-        let args = scan_args::<(), (), (), (), _, ()>(args)?;
-        let kwargs = get_kwargs::<_, (), (Option<String>, Option<String>, Option<String>), ()>(
-            args.keywords,
-            &[],
-            &["remote", "local", "remote_replica"],
-        )?;
-    
-        Ok(())
+impl Database {
+    pub fn new(db: libsql::Database, conn: libsql::Connection) -> Self {
+        Database {
+            db: RefCell::new(Some(Arc::new(Mutex::new(db)))),
+            conn: RefCell::new(Some(Arc::new(Mutex::new(conn)))),
+        }
     }
-    
-    // figure out async? - RefCell Mutex it all as everything is wrapped in the GVL anyway
-    // so we cannot `await`
-    fn connect(rb_self: typed_data::Obj<Self>) -> Result<(), Error> {
-    let db = Builder::new_local(":memory:").build();
-    let conn = db.connect().unwrap();
 
-    Ok(())
-}
-}
+    pub fn initialize(_rb_self: typed_data::Obj<Self>, args: &[Value]) -> Result<Database, Error> {
+        let args = scan_args::<(), (), (), (), _, ()>(args)?;
+        let args = get_kwargs(args.keywords, &[], &["url"])?;
 
-pub fn hello(subject: String) -> Result<String, Error> {
-    Ok(format!("Hello from Rust, {subject}!"))
-}
+        let _: () = args.required;
+        let (url,): (Option<String>,) = args.optional;
+        let _: () = args.splat;
+        let url = url.unwrap_or_else(|| String::from("test.db"));
 
-pub fn world(subject: String) -> String {
-    format!("Hello from Rust, {subject}!")
-}
+        let db = TOKIO_RT.block_on(async { libsql::Builder::new_local(url).build().await}).unwrap();
+        let conn = TOKIO_RT.block_on(async { db.connect() }).unwrap();
 
-pub fn hello_raise(subject: String) -> Result<String, Error> {
-    Err(errors::to_rb_exception(libsql::Error::InvalidUTF8Path))
+        Ok(Database::new(db, conn))
+    }
 }
 
 #[cfg(test)]
