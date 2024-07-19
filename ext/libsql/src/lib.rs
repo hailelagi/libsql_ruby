@@ -5,6 +5,7 @@ use magnus::{function, method, prelude::*, Error, Module, Object, Ruby};
 pub mod connection;
 mod database;
 mod errors;
+mod nogvl;
 
 #[magnus::init]
 fn init(ruby: &Ruby) -> Result<(), Error> {
