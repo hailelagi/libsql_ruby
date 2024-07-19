@@ -2,8 +2,10 @@
 
 require_relative "libsql/version"
 require_relative "libsql/libsql"
+require_relative "libsql/errors"
 
+# stub
 module LibSQL
-  class Error < StandardError; end
-  # Your code goes here...
+  class Database
+  end
 end

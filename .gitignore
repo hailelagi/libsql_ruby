@@ -30,3 +30,6 @@ target/
 # rspec failure tracking
 .rspec_status
 .DS_Store
+:development
+libsql_ruby-0.1.0.gem
+test.db
