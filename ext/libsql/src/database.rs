@@ -45,7 +45,7 @@ impl Database {
         Ok(rb_self)
     }
 
-    pub fn add(&self) -> Result<i64, magnus::Error> {
+    pub fn expr(&self) -> Result<i64, magnus::Error> {
         let conn = self
             .conn
             .borrow()
@@ -64,6 +64,36 @@ impl Database {
             let value = row.get_value(0).unwrap();
 
             *value.as_integer().unwrap()
+        });
+
+        Ok(result)
+    }
+
+        pub fn execute(&self, sql: String, params: &[Value]) -> Result<i64, magnus::Error> {
+        let conn = self
+            .conn
+            .borrow()
+            .as_ref()
+            .ok_or(magnus::Error::new(
+                magnus::exception::io_error(),
+                "Connection not available",
+            ))?
+            .clone();
+        let conn = conn.lock().unwrap();
+
+        let result = TOKIO_RT.block_on(async {
+            let mut rows = conn.execute(sql, params.into()).await.unwrap();
+
+            /*
+
+            TODO: need to yield/return a value to the caller
+            such that it can iter over result
+            
+            let row = rows.next().await.unwrap().unwrap();
+            let value = row.get_value(0).unwrap();
+
+            *value.as_integer().unwrap()
+             */
         });
 
         Ok(result)

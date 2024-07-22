@@ -19,7 +19,8 @@ fn init(ruby: &Ruby) -> Result<(), Error> {
     db.define_alloc_func::<database::Database>();
     db.define_method("initialize", method!(database::Database::initialize, -1))?;
     db.define_method("close", method!(database::Database::close, 0))?;
-    db.define_method("add", method!(database::Database::add, 0))?;
+    db.define_method("add", method!(database::Database::expr, 0))?;
+    db.define_method("execute", method!(database::Database::execute, 2))?;
 
     // module.define_private_method("bye", method!(database::world, 1))?;
     // module.define_singleton_method("hello_raise", function!(database::hello_raise, 1))?;
