@@ -33,3 +33,4 @@ target/
 :development
 libsql_ruby-0.1.0.gem
 test.db
+mytest.db

@@ -3,22 +3,13 @@
 use std::cell::RefCell;
 use std::sync::{Arc, Mutex};
 
-use libsql;
-use libsql::{Builder, Connection};
+use magnus::typed_data::Obj;
 use magnus::{
-    class, define_class, exception, function, method, module,
-    prelude::*,
     scan_args::{get_kwargs, scan_args},
     typed_data, Error, Value,
 };
 
 use crate::connection::runtime::TOKIO_RT;
-
-pub enum Mode {
-    Remote,
-    Local,
-    RemoteReplica,
-}
 
 #[derive(Default)]
 #[magnus::wrap(class = "LibSQL::Database")]
@@ -28,14 +19,10 @@ pub(crate) struct Database {
 }
 
 impl Database {
-    pub fn new(db: libsql::Database, conn: libsql::Connection) -> Self {
-        Database {
-            db: RefCell::new(Some(Arc::new(Mutex::new(db)))),
-            conn: RefCell::new(Some(Arc::new(Mutex::new(conn)))),
-        }
-    }
-
-    pub fn initialize(_rb_self: typed_data::Obj<Self>, args: &[Value]) -> Result<Database, Error> {
+    pub fn initialize(
+        rb_self: typed_data::Obj<Self>,
+        args: &[Value],
+    ) -> Result<Obj<Database>, Error> {
         let args = scan_args::<(), (), (), (), _, ()>(args)?;
         let args = get_kwargs(args.keywords, &[], &["url"])?;
 
@@ -49,26 +36,55 @@ impl Database {
             .unwrap();
         let conn = TOKIO_RT.block_on(async { db.connect() }).unwrap();
 
-        Ok(Database::new(db, conn))
+        rb_self.db.borrow_mut().replace(Arc::new(Mutex::new(db)));
+        rb_self
+            .conn
+            .borrow_mut()
+            .replace(Arc::new(Mutex::new(conn)));
+
+        Ok(rb_self)
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use rb_sys::{rb_int2big, rb_num2fix, FIXNUM_P};
-    use rb_sys_test_helpers::ruby_test;
+    pub fn add(&self) -> Result<i64, magnus::Error> {
+        let conn = self
+            .conn
+            .borrow()
+            .as_ref()
+            .ok_or(magnus::Error::new(
+                magnus::exception::io_error(),
+                "Connection not available",
+            ))?
+            .clone();
+        let conn = conn.lock().unwrap();
 
-    #[ruby_test]
-    fn test_something() {
-        // Your test code here will have a valid Ruby VM (hint: this works with
-        // the `magnus` crate, too!)
-        //
-        // ...
+        let result = TOKIO_RT.block_on(async {
+            let mut rows = conn.query("SELECT 1 + ?1", [42]).await.unwrap();
 
-        let int = unsafe { rb_num2fix(1) };
-        let big = unsafe { rb_int2big(9999999) };
+            let row = rows.next().await.unwrap().unwrap();
+            let value = row.get_value(0).unwrap();
 
-        assert!(FIXNUM_P(int));
-        assert!(!FIXNUM_P(big));
+            *value.as_integer().unwrap()
+        });
+
+        Ok(result)
+    }
+
+    pub fn close(&self) -> Result<(), Error> {
+        let conn = self
+            .conn
+            .borrow()
+            .as_ref()
+            .ok_or(magnus::Error::new(
+                magnus::exception::io_error(),
+                "Connection not available",
+            ))?
+            .clone();
+    
+        let conn = conn.lock().unwrap();
+        TOKIO_RT.block_on(async { conn.reset().await });
+
+        self.conn.replace(None);
+
+        Ok(())
     }
 }

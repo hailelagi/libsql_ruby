@@ -1,5 +1,5 @@
 use ::libsql as libsql_core;
-use magnus::{eval, prelude::*, Error, ExceptionClass, IntoValue};
+use magnus::{eval, Error, ExceptionClass};
 
 // TODO: could refactor with a lazy static init by pre-processing the Enums
 /*
@@ -27,7 +27,7 @@ pub fn to_rb_exception(error: libsql_core::errors::Error) -> Error {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use magnus::{eval, typed_data::Inspect, ExceptionClass, RClass, Ruby, Value};
+    use magnus::{eval, typed_data::Inspect, ExceptionClass};
 
     use rb_sys_test_helpers::ruby_test;
 

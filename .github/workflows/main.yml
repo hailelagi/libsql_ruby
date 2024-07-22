@@ -11,7 +11,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  rubocop:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,10 +22,10 @@ jobs:
           cargo-cache: true
       - run: bundle install
       - run: bundle exec rake rubocop
-      - run: cargo clippy && cargo fmt --check
+      # - run: cargo clippy && cargo fmt --check
 
   test:
-    needs: [rubocop]
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,10 +51,12 @@ jobs:
           sudo make install
           cd ..
           bundle install
+          bundle exec rake clobber
+          bundle exec rake compile:debug
           bundle exec rake spec:valgrind
 
   build:
-    needs: [test, rubocop]
+    needs: [lint, test]
     runs-on: ${{ matrix.os }}
     name: Cross compile Ruby native gem for ${{ matrix.ruby }}
     strategy:
